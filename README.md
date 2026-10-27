@@ -8,7 +8,7 @@ A curious little agent with very large ears: FENNEC chats in 24 languages, reads
 
 - **Multilingual conversation:** choose an answer language independently of your question.
 - **Two connections:** bring your own OpenAI or Virginia Tech ARC API key.
-- **Research:** OpenAI web research and Python tools; ARC article exploration using Crossref abstracts.
+- **Research:** OpenAI web research and Python tools; ARC article exploration using Crossref abstracts. Each completed article suggests the next reading subject; an optional topic leash keeps the trail anchored.
 - **Document reading:** TXT, PDF, HTML, and DOCX extraction in the browser, with chunked analysis for longer documents.
 - **Read aloud:** browser speech synthesis, with available languages and voices depending on your browser.
 - **Optional encrypted memory:** restore earlier conversations using the same API key. Memory starts off on every visit.
@@ -57,7 +57,11 @@ Default limits are 16 MiB per vault, 128 MiB total plus SQLite overhead, and 120
 
 ## Autonomous reading
 
-When enabled, FENNEC starts research after 30 seconds of inactivity while the tab is visible and a key is present. In this version, clicks, typing, and scrolling interrupt research and reset the timer—including minimizing the answer panel. Hidden tabs pause research, and five minutes without user activity puts the fox to sleep. An autonomous request error disables automatic reading until it is re-enabled. The reading animation alone does not mean a research request is running.
+When enabled, FENNEC starts research after 30 seconds of inactivity while the tab is visible and a key is present. A completed article supplies a connected subject for the next reading: AI might lead to whale communication, then marine ecology. The **Next up** line shows the next subject and its connection to the article. The choice is generated in the same research response, with no extra model request, and is accepted only with valid metadata and a source citation. If no valid next subject is available, the current subject is retained.
+
+Check **“Keep this fox on a short leash — stick to this subject.”** to constrain new threads to the original topic. Searches include that original topic as well as the selected angle. The box starts unchecked. Editing the topic or changing the leash resets the trail; **Research now** starts from the entered topic and can seed a new trail. Trail state lasts only for this visit.
+
+Clicks, typing, and scrolling still interrupt autonomous research and reset the timer—including minimizing the answer panel. Hidden tabs pause research. Enabled reading can continue beyond five minutes of inactivity; the five-minute sleep rule applies when automatic reading is off or no key is entered. Turn automatic reading off to stop the trail. An autonomous request error disables automatic reading until it is re-enabled. Model and tool charges continue to apply. The reading animation alone does not mean a research request is running.
 
 ## Files
 
@@ -70,6 +74,7 @@ When enabled, FENNEC starts research after 30 seconds of inactivity while the ta
 | `assets/fennec-logo.png` | Project logo |
 | `SETUP.txt` | Detailed cPanel deployment guide |
 | `tests/test-memory.mjs` | Browser/PHP integration checks using simulated AI responses |
+| `tests/test-research.mjs` | Article trails, topic focus, idle scheduling, and provider checks |
 
 When editing the memory client, update the embedded implementation in `fennec.html`; editing the reference copy alone does not change the running app.
 
@@ -83,7 +88,7 @@ npx playwright install chromium
 npm test
 ```
 
-Tests execute the actual PHP backend and SQLite store in an isolated WebAssembly filesystem. They cover encryption, restoration, provider/key isolation, failed-save retry, tamper rejection, pagination, quotas, HTTPS/origin checks, and memory state in provider instructions. AI responses are simulated; no live API key or paid model request is needed. Screenshots go to `tests/artifacts/`.
+Tests execute the actual PHP backend and SQLite store in an isolated WebAssembly filesystem. They cover encryption, restoration, provider/key isolation, failed-save retry, tamper rejection, pagination, quotas, HTTPS/origin checks, and memory state in provider instructions. AI responses are simulated; no live API key or paid model request is needed. The reading suite checks linked subjects, topic focus, invalid metadata, and continuous idle reading with simulated sources. Screenshots go to `tests/artifacts/`.
 
 Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` if you need to use a separately installed Chromium executable.
 
