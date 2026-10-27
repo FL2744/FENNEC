@@ -1,0 +1,20 @@
+# Private deployment settings and encrypted user data
+fennec-memory-config.php
+fennec-private/
+*.sqlite
+*.sqlite-*
+*.db
+.env
+.env.*
+!.env.example
+
+# Local tools, builds and generated artifacts
+node_modules/
+test-runtime/
+tools/
+.npm-cache/
+*.zip
+.DS_Store
+/fennec-logo*.png
+tests/*.png
+tests/artifacts/

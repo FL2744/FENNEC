@@ -1,0 +1,90 @@
+FENNEC — optional encrypted persistent memory
+
+UPLOAD AND CONFIGURE IN CPANEL
+1. Keep a backup of your current fennec.html.
+2. In cPanel File Manager, create fennec-private directly in your account home
+   folder, OUTSIDE public_html and every other website document root. Set folder
+   permissions to 700. Do not place it beside the HTML or inside a public folder.
+3. Edit fennec-memory-config.example.php. Replace YOUR_CPANEL_USERNAME with the
+   actual account home path shown in File Manager. Add any additional website
+   document roots to public_roots. Keep allowed_origin set to the exact HTTPS
+   origin hosting FENNEC (no trailing slash or path).
+4. Rename that edited file to fennec-memory-config.php.
+5. Upload fennec.html, fennec-memory.php, and fennec-memory-config.php into the
+   same website folder as your original fennec.html. No other files are required.
+   The JavaScript is embedded in the HTML; memory-client.js is a source copy.
+6. In cPanel, select PHP 8.1 or newer and enable PDO / pdo_sqlite if needed.
+   The backend creates its SQLite database in fennec-private automatically.
+7. Open https://l1001.vt.domains/fennec.html and test with a personal API key.
+   Memory is OFF by default. Check Enable persistent memory, then ask a question.
+   Wait for 'Conversation encrypted and saved.' Reload, re-enter the SAME key,
+   and check the box again. Previous conversations should appear, and the latest
+   seven exchanges are recalled in the next request.
+8. Test with the box unchecked: there should be no requests to fennec-memory.php.
+   Do not upload test-runtime/, tests/, or any test credentials.
+
+HOW IT WORKS
+- Public identifier: lowercase hex SHA-256 of the trimmed API key, in the browser.
+- HKDF-SHA-256 derives separate AES-256-GCM and storage-authentication secrets
+  directly from the ORIGINAL API key with different purpose labels. The public
+  identifier cannot derive the encryption key. Provider labels separate vaults.
+- Every completed exchange is encrypted with a fresh random 12-byte nonce and
+  authenticated with its provider, identifier, and unique exchange ID.
+- The PHP endpoint receives only the hash identifier, an independent derived
+  access token, encrypted envelopes, and metadata. Never the original API key,
+  the encryption key, or conversation plaintext. The original key goes directly
+  to the AI provider, as it did before.
+- A public identifier without the derived access token cannot locate the vault.
+  The server hashes both into a storage namespace; it never stores the bearer
+  token itself. All calls require HTTPS and the endpoint grants no CORS access.
+- Writes append independently, so concurrent devices do not overwrite history.
+  Retried saves are idempotent. Reads show the newest 50 exchanges; Load older
+  conversations retrieves earlier pages. All saved entries remain until storage
+  limits are reached. Storage defaults: 16 MiB per vault, 128 MiB total plus SQLite
+  overhead; 120 requests/minute per IP. The quota failure never deletes history.
+- API keys, derived encryption keys, and plaintext are kept in tab memory only.
+  No localStorage, sessionStorage, IndexedDB, cookies, or third-party analytics.
+- The checkbox preference is not remembered; opt in on each visit. Enabling or
+  disabling memory starts a fresh context. Earlier unsaved chat is not uploaded
+  retroactively. Changing the key or provider clears loaded memory from the tab.
+- Only completed non-transient exchanges are saved. Partial/failed responses,
+  speech, internal tool logs, and intermediate document chunk notes are not saved.
+  Supplied passage text is included in a completed exchange, capped with its
+  question at 28,000 characters; answers are capped at 28,000 characters. This
+  matches the existing recent-conversation context limits.
+- Recent decrypted history is sent directly to the selected AI provider with
+  new questions. Persistent memory is NOT a promise to hide prompts from that
+  provider. Server metadata includes hashed vault identity, order, sizes, and
+  short-lived hashed-IP rate counters; hosting access logs may retain IPs/times.
+- Unchecking stops future memory requests/saves. It does not delete saved data.
+  Forget key removes the key and loaded memory from this tab, not the server.
+- Shared API keys share memories. Rotating/losing a key changes/loses access.
+  No key migration or recovery feature is included in this first version. Keep
+  the old key if you need old memory (revocation at the provider does not prevent
+  local key derivation). A weak/custom key is unsuitable for this scheme.
+- A site administrator cannot decrypt database files using the stored identifier
+  or bearer secret. Someone controlling the site can change its JavaScript to
+  intercept a key on a future visit. This implementation does not prevent that.
+- The notebook download remains a user-requested PLAINTEXT export of the session's
+  logs. Restored history is shown in the separate Previous conversations panel.
+
+TROUBLESHOOTING
+Memory unavailable: configure all three server files, use HTTPS, and check PHP
+and directory permissions. The client sends its derived storage token in X-Fennec-Memory-Token as well as
+Authorization, so CGI/FastCGI hosts that strip Authorization still work. Upload
+both the updated HTML and PHP files together. Never send tokens in URLs.
+Chat continues when memory is unavailable, with an explicit warning that it is
+not saving. Failed saves can be retried while the tab remains open. Check the
+save status before closing the tab. The API key must not be placed in config,
+URLs, analytics, debug output, server logs, or support messages.
+
+Back up the entire private folder with cPanel. Backups contain ciphertext and
+metadata. Do not publish the private folder or backup archives. Restrict backup
+access. You can remove all memories by removing the database when no requests
+are running; there is no user-facing deletion endpoint in this version.
+
+CRYPTOGRAPHY REFERENCES
+https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/deriveKey
+https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/encrypt
+https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html
+https://www.php.net/manual/en/ref.pdo-sqlite.php
