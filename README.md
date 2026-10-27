@@ -2,7 +2,7 @@
 
 A curious little agent with very large ears: FENNEC chats in 24 languages, reads documents and articles, and occasionally remembers what you told it.
 
-[FENNEC on the web →](https://l1001.vt.domains/fennec.html)
+[FENNEC web implementation →](https://l1001.vt.domains/fennec.html)
 
 ## What the fox does
 
