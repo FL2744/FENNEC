@@ -878,7 +878,7 @@ function researchPlan(autonomous){
 }
 function showResearchTrail(){
  const plan=researchPlan(true);
- $('research-trail').textContent='Next up: '+plan.topic+'. '+(nextResearchThread?.connection?nextResearchThread.connection+' ':'')+(plan.focused?'Short leash: staying with '+plan.anchor+'.':'The fox is free to follow his nose.');
+ $('research-trail').textContent='Next up: '+plan.topic+'. '+(nextResearchThread?.connection?nextResearchThread.connection+' ':'')+(plan.focused?'Staying focused on '+plan.anchor+'.':'The fox is free to follow his nose.');
 }
 function resetResearchTrail(){researchRevision++;nextResearchThread=null;showResearchTrail()}
 function researchVisibleText(raw){
@@ -919,7 +919,7 @@ function beginResearch(autonomous){
 $('research-topic').addEventListener('input',resetResearchTrail);
 $('research-topic').addEventListener('change',()=>addLog('Research focus updated',researchAnchor()));
 $('research-focus').addEventListener('change',()=>{
- resetResearchTrail();addLog('Fox leash adjusted',$('research-focus').checked?'Short leash: future readings stay within '+researchAnchor()+'.':'Leash off: the next article can lead to a new subject.');
+ resetResearchTrail();addLog('Research focus adjusted',$('research-focus').checked?'Staying focused: future readings stay within '+researchAnchor()+'.':'Free exploration: the next article can lead to a new subject.');
 });
 $('research-now').onclick=async()=>{
  if(active){if(!active.autonomous)return;active.controller.abort();await inFlight;}

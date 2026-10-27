@@ -8,7 +8,7 @@ A curious little agent with very large ears: FENNEC chats in 24 languages, reads
 
 - **Multilingual conversation:** choose an answer language independently of your question.
 - **Two connections:** bring your own OpenAI or Virginia Tech ARC API key.
-- **Research:** OpenAI web research and Python tools; ARC article exploration using Crossref abstracts. Each completed article suggests the next reading subject; an optional topic leash keeps the trail anchored.
+- **Research:** OpenAI web research and Python tools; ARC article exploration using Crossref abstracts. Each completed article suggests the next reading subject; an optional focus setting keeps the trail anchored.
 - **Document reading:** TXT, PDF, HTML, and DOCX extraction in the browser, with chunked analysis for longer documents.
 - **Read aloud:** browser speech synthesis, with available languages and voices depending on your browser.
 - **Optional encrypted memory:** restore earlier conversations using the same API key. Memory starts off on every visit.
@@ -59,7 +59,7 @@ Default limits are 16 MiB per vault, 128 MiB total plus SQLite overhead, and 120
 
 When enabled, FENNEC starts research after 30 seconds of inactivity while the tab is visible and a key is present. A completed article supplies a connected subject for the next reading: AI might lead to whale communication, then marine ecology. The **Next up** line shows the next subject and its connection to the article. The choice is generated in the same research response, with no extra model request, and is accepted only with valid metadata and a source citation. If no valid next subject is available, the current subject is retained.
 
-Check **“Stay focused!”** to constrain new threads to the original topic. Searches include that original topic as well as the selected angle. The box starts unchecked. Editing the topic or changing the leash resets the trail; **Research now** starts from the entered topic and can seed a new trail. Trail state lasts only for this visit.
+Check **“Stay focused!”** to constrain new threads to the original topic. Searches include that original topic as well as the selected angle. The box starts unchecked. Editing the topic or changing the focus setting resets the trail; **Research now** starts from the entered topic and can seed a new trail. Trail state lasts only for this visit.
 
 Clicks, typing, and scrolling still interrupt autonomous research and reset the timer—including minimizing the answer panel. Hidden tabs pause research. Enabled reading can continue beyond five minutes of inactivity; the five-minute sleep rule applies when automatic reading is off or no key is entered. Turn automatic reading off to stop the trail. An autonomous request error disables automatic reading until it is re-enabled. Model and tool charges continue to apply. The reading animation alone does not mean a research request is running.
 
