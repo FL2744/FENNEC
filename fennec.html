@@ -185,23 +185,34 @@ line([[502,376],[567,357],[568,398],[502,420]],1);
 line([[492,370],[492,432]],2);
 });
 layer(work/Math.max(desk,.001),()=>{
-// The fox sits behind the computer: show its rear casing to the viewer.
-poly([[441,428],[603,428],[622,443],[423,443]],'#fff','#111',2);
-poly([[445,425],[438,340],[600,340],[605,425]],'#111');
-// A narrow bevel and angular rear panel replace the outward-facing display.
-line([[440,342],[598,342],[603,423]],2,'#fff');
-poly([[449,351],[587,351],[592,412],[455,412]],'#fff');
-poly([[449,351],[587,351],[592,412],[566,412]],'#111');
-// Small vent slots and a geometric maker's mark identify the back of the lid.
-for(let i=0;i<5;i++)line([[466+i*9,398],[471+i*9,398]],2);
-poly([[513,369],[523,379],[513,389],[503,379]],'#111');
+// The keyboard is on the far side of the monitor, nearest the fox.
+poly([[422,393],[613,393],[631,425],[405,425]],'#fff','#111',2);
+for(let row=0;row<3;row++)for(let col=0;col<11;col++){
+const x=423+col*17-row*3,y=398+row*8;
+poly([[x,y],[x+12,y],[x+13,y+5],[x-1,y+5]],'#fff','#111',.8);
+}
+const tap=Math.sin(time*9);
+// Forearms and alternating paws reach onto the keyboard, behind the casing.
+poly([[423,366],[446,373],[448,393],[427,407],[414,396]],'#fff','#111',2);
+poly([[552,365],[570,371],[606,389],[609,405],[590,405],[556,389]],'#fff','#111',2);
+poly([[421,388+tap*3],[442,386+tap*3],[450,402+tap*3],[424,407+tap*3]],'#fff','#111',2);
+poly([[590,388-tap*3],[610,390-tap*3],[616,405-tap*3],[589,405-tap*3]],'#fff','#111',2);
+// Opaque monitor BACK occludes the keyboard and paws. No screen faces the viewer.
+poly([[591,352],[600,346],[611,418],[602,424]],'#fff','#111',2);
+poly([[448,352],[591,352],[602,424],[454,424]],'#111','#111',2);
+line([[451,354],[590,354]],1,'#fff');
+// Rear ventilation slots, mounting bracket, and cable identify the back.
+for(let i=0;i<7;i++)line([[470+i*13,366],[474+i*13,375]],1.5,'#fff');
+poly([[514,384],[536,384],[538,402],[516,402]],'#111','#fff',1);
+line([[527,402],[529,418],[546,424]],1,'#fff');
+poly([[521,424],[537,424],[541,440],[518,440]],'#fff','#111',2);
+poly([[501,439],[554,439],[566,447],[487,447]],'#111');
 });
 layer(write/Math.max(desk,.001),()=>{poly([[432,426],[525,421],[560,446],[458,451]],'#fff','#111');for(let i=0;i<3;i++)line([[454+i*6,433+i*5],[477+i*6+Math.min(45,(time*16)%46),432+i*5]],1);});
 ctx.restore();});
-// Animated paws and pencil are drawn in front of the work and writing props.
-layer(Math.max(work,write),()=>{const tap=Math.sin(time*9);let x=write?494+Math.sin(time*3)*14:443,y=write?418+Math.sin(time*6)*3:425+tap*4;
+// The writing paw stays in front of the paper; working paws are behind the monitor.
+layer(write,()=>{let x=494+Math.sin(time*3)*14,y=418+Math.sin(time*6)*3;
 poly([[x-15,y-12],[x+12,y-8],[x+18,y+7],[x-13,y+10]],'#fff','#111',2);
-layer(work,()=>{poly([[538,420-tap*4],[562,418-tap*4],[567,433-tap*4],[537,435-tap*4]],'#fff','#111',2)});
 layer(pencil,()=>{line([[x+1,y+13],[x+29,y-46]],5);line([[x+2,y+10],[x+27,y-43]],1,'#fff');});});
 layer(thought,()=>{for(let i=0;i<3;i++){let y=202-i*37+Math.sin(time*2-i)*4;poly([[637+i*16,y-7],[644+i*16,y],[637+i*16,y+7],[630+i*16,y]],i===2?'#fff':'#111','#111')}text('?',671,125,38)});
 layer(speak,()=>{const a=Math.sin(time*6)*4;line([[630,231],[650+a,220],[674+a,225]],3);line([[632,250],[678+a,250]],3);line([[630,269],[650+a,280],[674+a,275]],3)});
