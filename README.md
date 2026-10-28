@@ -55,6 +55,10 @@ Default limits are 16 MiB per vault, 128 MiB total plus SQLite overhead, and 120
 - An administrator cannot decrypt the archive using the stored identifier or derived access token. A person controlling the website can modify its JavaScript to capture a key on a future visit; this design does not prevent that.
 - Hosting logs and the backend can retain metadata. The user-requested notebook download is a **plaintext** session export.
 
+## Demo
+
+Click **DEMO** under AI connection for an eight-scene showcase with five seconds per scene. It demonstrates the fox's poses, sample reading and calculations, typed output, multilingual replies, connected research, memory, and rest. It loops until clicked again; Escape also exits. The demo uses local sample content, makes no provider or memory requests, and restores the previous answer and panel state when it stops. Sending a new question exits the demo. No audio plays during the showcase.
+
 ## Autonomous reading
 
 When enabled, FENNEC starts research after 30 seconds of inactivity while the tab is visible and a key is present. A completed article supplies a connected subject for the next reading: AI might lead to whale communication, then marine ecology. The **Next up** line shows the next subject and its connection to the article. The choice is generated in the same research response, with no extra model request, and is accepted only with valid metadata and a source citation. If no valid next subject is available, the current subject is retained.
@@ -75,6 +79,7 @@ Clicks, typing, and scrolling still interrupt autonomous research and reset the 
 | `SETUP.txt` | Detailed cPanel deployment guide |
 | `tests/test-memory.mjs` | Browser/PHP integration checks using simulated AI responses |
 | `tests/test-research.mjs` | Article trails, topic focus, idle scheduling, and provider checks |
+| `tests/test-demo.mjs` | Showcase timing, no-network behavior, and restoration checks |
 
 When editing the memory client, update the embedded implementation in `fennec.html`; editing the reference copy alone does not change the running app.
 

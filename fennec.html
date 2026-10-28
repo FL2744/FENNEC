@@ -41,6 +41,7 @@
 #memory-help-open{margin:6px 0 12px}#memory-help{width:min(680px,calc(100vw - 32px));max-height:calc(100dvh - 48px);padding:0 24px 20px;border:2px solid #111;border-radius:0;background:#fff;color:#111;box-shadow:6px 6px 0 #ddd;font:13px/1.7 monospace;overflow:auto;overflow-wrap:anywhere}#memory-help::backdrop{background:rgb(0 0 0 / .25)}.memory-help-heading{position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0 14px;background:#fff;border-bottom:1px solid #bbb}.memory-help-heading h2{letter-spacing:1px}#memory-help ul{padding-left:20px;margin:18px 0 0}#memory-help li{margin:0 0 16px}#memory-help li:last-child{margin-bottom:0}@media(max-width:650px){#memory-help{padding:0 16px 18px;font-size:12px}.memory-help-heading{gap:10px}}
 .project-footer{margin-top:28px;padding-top:20px;border-top:2px solid #111;font:12px/1.7 monospace}.project-footer a{color:inherit;text-underline-offset:3px}.project-footer a:focus-visible{outline:3px double #111;outline-offset:3px}
 .research-topic .research-leash{display:block;margin-top:14px;line-height:1.7}#research-trail{border-left:2px solid #111;padding-left:10px;margin-top:13px}
+#demo{background:#111;color:#fff;font:12px monospace;font-variant:small-caps;letter-spacing:1.5px;padding:9px 13px}#demo:hover{background:#333}#demo[aria-pressed="true"]{outline:2px solid #111;outline-offset:3px}#answer-body{transition:opacity .18s ease}#answer-body.demo-fade{opacity:0}@media(prefers-reduced-motion:reduce){#answer-body{transition:none}}
 </style></head>
 <body>
 <dialog id="memory-help" aria-labelledby="memory-help-title"><div class="memory-help-heading"><h2 id="memory-help-title">HOW IT WORKS</h2><button id="memory-help-close" type="button" aria-label="Close persistent memory explanation" autofocus>Close ×</button></div><ul><li>Public identifier: lowercase hex SHA-256 of the trimmed API key, in the browser.</li><li>HKDF-SHA-256 derives separate AES-256-GCM and storage-authentication secrets directly from the ORIGINAL API key with different purpose labels. The public identifier cannot derive the encryption key. Provider labels separate vaults.</li><li>Every completed exchange is encrypted with a fresh random 12-byte nonce and authenticated with its provider, identifier, and unique exchange ID.</li><li>The PHP endpoint receives only the hash identifier, an independent derived access token, encrypted envelopes, and metadata. Never the original API key, the encryption key, or conversation plaintext. The original key goes directly to the AI provider, as it did before.</li><li>A public identifier without the derived access token cannot locate the vault. The server hashes both into a storage namespace; it never stores the bearer token itself. All calls require HTTPS and the endpoint grants no CORS access.</li><li>Writes append independently, so concurrent devices do not overwrite history. Retried saves are idempotent. Reads show the newest 50 exchanges; Load older conversations retrieves earlier pages. All saved entries remain until storage limits are reached. Storage defaults: 16 MiB per vault, 128 MiB total plus SQLite overhead; 120 requests/minute per IP. The quota failure never deletes history.</li><li>API keys, derived encryption keys, and plaintext are kept in tab memory only. No localStorage, sessionStorage, IndexedDB, cookies, or third-party analytics.</li><li>The checkbox preference is not remembered; opt in on each visit. Enabling or disabling memory starts a fresh context. Earlier unsaved chat is not uploaded retroactively. Changing the key or provider clears loaded memory from the tab.</li><li>Only completed non-transient exchanges are saved. Partial/failed responses, speech, internal tool logs, and intermediate document chunk notes are not saved. Supplied passage text is included in a completed exchange, capped with its question at 28,000 characters; answers are capped at 28,000 characters. This matches the existing recent-conversation context limits.</li><li>Recent decrypted history is sent directly to the selected AI provider with new questions. Persistent memory is NOT a promise to hide prompts from that provider. Server metadata includes hashed vault identity, order, sizes, and short-lived hashed-IP rate counters; hosting access logs may retain IPs/times.</li><li>Unchecking stops future memory requests/saves. It does not delete saved data. Forget key removes the key and loaded memory from this tab, not the server.</li><li>Shared API keys share memories. Rotating/losing a key changes/loses access. No key migration or recovery feature is included in this first version. Keep the old key if you need old memory (revocation at the provider does not prevent local key derivation). A weak/custom key is unsuitable for this scheme.</li><li>A site administrator cannot decrypt database files using the stored identifier or bearer secret. Someone controlling the site can change its JavaScript to intercept a key on a future visit. This implementation does not prevent that.</li><li>The notebook download remains a user-requested PLAINTEXT export of the session&#x27;s logs. Restored history is shown in the separate Previous conversations panel.</li></ul></dialog>
@@ -54,7 +55,7 @@
 <p class="fine">Enter the same key and enable memory on each visit. A shared key shares memory. Keep your key to retain access. The latest seven exchanges are recalled in new answers and sent to your selected AI provider.</p>
 <button id="memory-help-open" type="button" aria-haspopup="dialog" aria-controls="memory-help">How persistent memory works</button>
 <p id="memory-status" class="fine" role="status" aria-live="polite">Persistent memory is off. Conversations stay in this tab.</p><button id="memory-retry" type="button" hidden>Retry memory connection</button></div>
-<p id="provider-note" class="fine">OpenAI: gpt-6-luna with web research and Python tools. OpenAI API and tool billing applies.</p><p class="fine">Keys remain only in this tab and go directly from this browser to the selected provider; they are never saved. Switching providers starts a fresh conversation so earlier chat history is not forwarded to the other service.</p><label class="connection-done"><input id="connection-done" type="checkbox"> Done</label><p id="connection-message" class="fine" role="status"></p></div></details><span id="activity" role="status">sleeping</span></div></header>
+<p id="provider-note" class="fine">OpenAI: gpt-6-luna with web research and Python tools. OpenAI API and tool billing applies.</p><p class="fine">Keys remain only in this tab and go directly from this browser to the selected provider; they are never saved. Switching providers starts a fresh conversation so earlier chat history is not forwarded to the other service.</p><label class="connection-done"><input id="connection-done" type="checkbox"> Done</label><p id="connection-message" class="fine" role="status"></p></div></details><button id="demo" type="button" aria-pressed="false" title="Start the FENNEC demo">DEMO</button><span id="activity" role="status">sleeping</span></div></header>
 <canvas id="stage" width="1000" height="620" role="img" aria-label="An animated geometric fennec fox"></canvas>
 <p id="memory-summary" class="fine" role="status" aria-live="polite" hidden></p>
 
@@ -497,6 +498,7 @@ function memorySnapshot(){
 }
 function memoryBusy(busy){for(const id of ['persistent-memory','api-key','arc-key','memory-retry','connection-done'])$(id).disabled=busy}
 
+let demoSession=null;
 const initial='neutral';
 function setState(state){window.fennec.setMode(state)}
 // Read aloud uses the browser's available voices and starts only on a button click.
@@ -520,7 +522,7 @@ function answerVoice(){
   Number(b.default)-Number(a.default))[0]||null;
 }
 function refreshSpeechControls(){
- const voice=answerVoice(),busy=Boolean(active||uploading||documentBatch);
+ const voice=answerVoice(),busy=Boolean(active||uploading||documentBatch||demoSession);
  const ready=Boolean(speechAnswer&&speechAnswer.language===$('language').value&&!busy);
  $('read-aloud').disabled=!speechEngine||!voice||!ready||Boolean(speechJob);
  $('pause-speech').disabled=!speechJob||speechJob.phase==='starting';
@@ -723,6 +725,7 @@ function documentChunks(text,limit=16000){
  return chunks;
 }
 async function run(question,autonomous=false,research=false,readingPlan=null){
+ if(demoSession)stopDemo();
  if(uploading||documentBatch)return;
  if(!autonomous&&keyField().value.trim())setAnswerCollapsed(false);
  if(autonomous||research)return runTurn(question,autonomous,research,'',false,readingPlan);
@@ -751,6 +754,7 @@ async function run(question,autonomous=false,research=false,readingPlan=null){
  finally{documentBatch=false;$('provider').disabled=false;$('reading-file').disabled=false;idleSince=Date.now();refreshSpeechControls();}
 }
 async function runTurn(question,autonomous=false,research=false,passage=null,transient=false,readingPlan=null){
+ if(demoSession)stopDemo();
  if(uploading)return;
  clearSpeechAnswer();
  const key=keyField().value.trim();if(!key){$('connection').open=true;keyField().focus();$('error').hidden=false;$('error').textContent=`Enter your ${currentProvider()==='arc'?'VT ARC':'OpenAI'} API key first.`;return;}
@@ -833,6 +837,7 @@ $('stop').onclick=()=>active?.controller.abort();
 $('forget-key').onclick=()=>{stopSpeech();active?.controller.abort();$('api-key').value='';if(currentProvider()==='openai')memoryReset();$('explore').checked=false;setState('neutral');addLog('Connection cleared','The key has been removed from this tab.');};
 $('forget-arc-key').onclick=()=>{stopSpeech();if(currentProvider()==='arc')active?.controller.abort();$('arc-key').value='';if(currentProvider()==='arc')memoryReset();setState('neutral');addLog('ARC connection cleared','The ARC key has been removed from this tab.');};
 $('provider').addEventListener('change',async()=>{
+ if(demoSession)stopDemo();
  clearSpeechAnswer();
  $('provider').disabled=true;
  try{
@@ -852,6 +857,7 @@ $('connection-done').addEventListener('change',async()=>{
 });
 let languageChange=0;
 $('language').addEventListener('change',async()=>{
+ if(demoSession)stopDemo();
  clearSpeechAnswer();
  const revision=++languageChange,language=$('language').value;
  
@@ -931,15 +937,67 @@ $('explore').onchange=()=>{
  if($('explore').checked){addLog('AI reading enabled','After 30 seconds of inactivity, read an article and follow a connected subject next time. Repeats while this page is visible and a key is present.');}
  else {if(active?.autonomous)active.controller.abort();addLog('AI reading disabled');}
 };
+// A local, reversible showcase: no provider requests, notebook writes, or memory saves.
+const demoScenes=[
+ {mode:'thinking',title:'Thinking',text:'A thought is taking shape…\nWhat could a fox with very large ears learn today?'},
+ {mode:'reading',title:'Reading an article',text:'**Sample article: AI and whale communication**\nResearchers use pattern recognition to study the clicks and calls of whales.\n\nThis is a demo example, not a live research result.'},
+ {mode:'working',title:'Working with numbers',text:'**A small calculation**\n12 curious foxes × 2 enormous ears = 24 excellent listeners.\n\nDemo calculation — no Python or API request is running.'},
+ {mode:'writing',title:'Writing an answer',text:'Curiosity begins with a question. A good answer follows the evidence, admits what is uncertain, and leaves room for the next question.',typing:true},
+ {mode:'speaking',title:'A multilingual fox',text:'Hello! مرحباً! Bonjour! ¡Hola!\n\nChoose an answer language and FENNEC can reply in it. Browser read-aloud voices are available when supported.\n\nDemo preview — no audio is playing.'},
+ {mode:'reading',title:'Following his curiosity',text:'**One article leads to another**\nAI → whale communication → marine conservation.\n\n“Stay focused!” keeps the next reading connected to your original subject.'},
+ {mode:'neutral',title:'Remembering a conversation',text:'“Yes—I can usually remember our past conversations when persistent memory is turned on for this visit.”\n\nOptional memory encrypts completed conversations in your browser. This demo does not turn it on, access it, or save anything.'},
+ {mode:'sleeping',title:'A little rest',text:'Big ears. Small ego. A well-earned nap.\n\nClick DEMO again to return to your conversation. Otherwise, the showcase starts over.'}
+];
+function stopDemo(){
+ const demo=demoSession;if(!demo)return;demoSession=null;
+ clearTimeout(demo.stepTimer);clearTimeout(demo.fadeTimer);clearInterval(demo.typeTimer);
+ $('answer-body').classList.remove('demo-fade');
+ $('answer').replaceChildren(...demo.answer);$('sources').replaceChildren(...demo.sources);
+ $('answer').lang=demo.language;$('answer-state').textContent=demo.status;setAnswerCollapsed(demo.collapsed);
+ speechAnswer=demo.speechAnswer;speechNotice=demo.speechNotice;
+ $('demo').setAttribute('aria-pressed','false');$('demo').title='Start the FENNEC demo';
+ idleSince=lastUserActivity=Date.now();setState(demo.mode);refreshSpeechControls();
+}
+function showDemoScene(demo){
+ if(demoSession!==demo)return;
+ const scene=demoScenes[demo.index];clearInterval(demo.typeTimer);
+ $('answer-body').classList.add('demo-fade');setState(scene.mode);
+ demo.fadeTimer=setTimeout(()=>{
+  if(demoSession!==demo)return;
+  $('answer-state').textContent='DEMO · '+(demo.index+1)+' / '+demoScenes.length+' · '+scene.title;
+  $('answer').lang='en';$('sources').replaceChildren();setAnswerCollapsed(false);
+  showAnswer(scene.typing?'':scene.text,[]);$('answer-body').classList.remove('demo-fade');
+  if(scene.typing){let length=0;demo.typeTimer=setInterval(()=>{
+   if(demoSession!==demo)return;length=Math.min(scene.text.length,length+3);showAnswer(scene.text.slice(0,length),[]);
+   if(length===scene.text.length)clearInterval(demo.typeTimer);
+  },35)}
+ },180);
+ demo.stepTimer=setTimeout(()=>{if(demoSession===demo){demo.index=(demo.index+1)%demoScenes.length;showDemoScene(demo)}},5000);
+}
+$('demo').onclick=async()=>{
+ if(demoSession){stopDemo();return}
+ if(uploading||documentBatch)return;
+ if(active){active.controller.abort();await inFlight;}
+ if(demoSession||uploading||documentBatch)return;
+ const savedMode=window.fennec.mode,savedSpeech=speechAnswer,savedNotice=speechNotice;stopSpeech();
+ demoSession={index:0,mode:savedMode,speechAnswer:savedSpeech,speechNotice:savedNotice,
+  answer:[...$('answer').childNodes].map(n=>n.cloneNode(true)),sources:[...$('sources').childNodes].map(n=>n.cloneNode(true)),
+  language:$('answer').lang,status:$('answer-state').textContent,collapsed:$('answer-body').hidden};
+ $('demo').setAttribute('aria-pressed','true');$('demo').title='Stop demo and return to your conversation';
+ refreshSpeechControls();showDemoScene(demoSession);
+};
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&demoSession){stopDemo();$('demo').focus()}});
+
 // Real user input resets the timer and gives the conversation priority.
 function userInteraction(){
+ if(demoSession)return;
  idleSince=Date.now();lastUserActivity=Date.now();
  if(!active&&!uploading&&!documentBatch&&!speechJob)setState('neutral');
  if(active?.autonomous)active.controller.abort();
 }
 for(const event of ['pointerdown','keydown','input','wheel'])document.addEventListener(event,userInteraction,{passive:true});
 setInterval(()=>{
- if(document.hidden||active||uploading||documentBatch||speechJob)return;
+ if(document.hidden||demoSession||active||uploading||documentBatch||speechJob)return;
  // An enabled reading trail continues while visible; otherwise the idle fox sleeps.
  if(!($('explore').checked&&keyField().value.trim())&&Date.now()-lastUserActivity>=300000){if(window.fennec.mode!=='sleeping')setState('sleeping');return;}
  if(Date.now()-idleSince>=30000&&window.fennec.mode!=='reading'){
@@ -950,7 +1008,7 @@ setInterval(()=>{
   beginResearch(true);
  }
 },1000);
-document.addEventListener('visibilitychange',()=>{idleSince=Date.now();if(!document.hidden)userInteraction();if(document.hidden&&active?.autonomous)active.controller.abort();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&demoSession)stopDemo();idleSince=Date.now();if(!document.hidden)userInteraction();if(document.hidden&&active?.autonomous)active.controller.abort();});
 $('download').onclick=()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(records,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='fennec-notebook.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
 setState(initial);addLog('At rest',`${initial[0].toUpperCase()+initial.slice(1)} pose only. AI reading starts after 30 idle seconds when enabled and an API key is present.`);
 
