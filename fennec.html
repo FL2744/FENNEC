@@ -129,6 +129,13 @@ function expressionAt(seconds,speaking){
  const talking=.9*(1-pulse(seconds%22,12,17));
  return quiet*(1-speaking)+talking*speaking;
 }
+// An occasional, softly eased eyebrow lift: curious rather than startled.
+function curiosityAt(seconds,amount){
+ const phase=seconds%24;
+ if(phase<=4||phase>=9)return 0;
+ const x=Math.min(1,(phase-4)/1.5,(9-phase)/1.5);
+ return x*x*(3-2*x)*amount;
+}
 function draw(){
 ctx.clearRect(0,0,1000,620);ctx.fillStyle='#fff';ctx.fillRect(0,0,1000,620);
 const [tilt,drop,eye,book,work,write,sleep,pencil,speak,neutral]=pose;
@@ -154,10 +161,11 @@ const expression=expressionAt(time,speak)*(1-neutral),smile=Math.max(0,expressio
 let blink=Math.pow(Math.max(0,Math.cos(time*1.05)),42);let open=eye*(1-blink)*(1-.12*smile-.15*frown);
 // Eyes soften during smiles; sleeping eyes stay closed through every expression.
 for(const x of [-35,35]){if(open>.12){poly([[x-11,-19],[x-7,-19-11*open],[x+6,-19-11*open],[x+11,-19],[x+6,-19+8*open],[x-6,-19+8*open]]);ellipse(x-3,-19-5*open,2.8,2.2,'#fff')}else line([[x-11,-19],[x,-19-3*smile+2*frown],[x+11,-19]],3)}
-// Light brow movement gives the occasional frown a thoughtful character.
+// Curiosity belongs only to neutral, thinking, and reading, fading with pose blends.
+const curiosity=curiosityAt(time,Math.min(1,thought+book+neutral));
 layer((1-sleep)*.8,()=>{
- line([[-48,-37-smile*2],[-24,-37+frown*5-smile*3]],1.5);
- line([[24,-37+frown*5-smile*3],[48,-37-smile*2]],1.5);
+ line([[-48,-37-smile*2-curiosity*2],[-24,-37+frown*5-smile*3-curiosity*5]],1.5);
+ line([[24,-37+frown*5-smile*3-curiosity*3.5],[48,-37-smile*2-curiosity*1.5]],1.5);
 });
 poly([[-12,21],[12,21],[0,32]]);
 // Blend the mouth continuously rather than swapping fixed facial drawings.
