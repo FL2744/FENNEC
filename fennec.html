@@ -185,18 +185,14 @@ line([[502,376],[567,357],[568,398],[502,420]],1);
 line([[492,370],[492,432]],2);
 });
 layer(work/Math.max(desk,.001),()=>{
-// The keyboard is on the far side of the monitor, nearest the fox.
-poly([[422,393],[613,393],[631,425],[405,425]],'#fff','#111',2);
-for(let row=0;row<3;row++)for(let col=0;col<11;col++){
-const x=423+col*17-row*3,y=398+row*8;
-poly([[x,y],[x+12,y],[x+13,y+5],[x-1,y+5]],'#fff','#111',.8);
-}
+// A plain keyboard rests on the tabletop, behind the monitor and toward the fox.
+poly([[423,431],[612,431],[626,443],[410,443]],'#fff','#111',2);
 const tap=Math.sin(time*9);
-// Forearms and alternating paws reach onto the keyboard, behind the casing.
-poly([[423,366],[446,373],[448,393],[427,407],[414,396]],'#fff','#111',2);
-poly([[552,365],[570,371],[606,389],[609,405],[590,405],[556,389]],'#fff','#111',2);
-poly([[421,388+tap*3],[442,386+tap*3],[450,402+tap*3],[424,407+tap*3]],'#fff','#111',2);
-poly([[590,388-tap*3],[610,390-tap*3],[616,405-tap*3],[589,405-tap*3]],'#fff','#111',2);
+// Forearms reach down to the keyboard; paws alternate just above its surface.
+poly([[423,366],[446,373],[448,427],[427,439],[414,428]],'#fff','#111',2);
+poly([[552,365],[570,371],[605,421],[608,437],[589,437],[556,389]],'#fff','#111',2);
+poly([[421,423+tap*2],[442,421+tap*2],[450,435+tap*2],[424,439+tap*2]],'#fff','#111',2);
+poly([[590,421-tap*2],[610,423-tap*2],[616,437-tap*2],[589,437-tap*2]],'#fff','#111',2);
 // Opaque monitor BACK occludes the keyboard and paws. No screen faces the viewer.
 poly([[591,352],[600,346],[611,418],[602,424]],'#fff','#111',2);
 poly([[448,352],[591,352],[602,424],[454,424]],'#111','#111',2);
