@@ -26,9 +26,7 @@ The frontend is a self-contained HTML application with JavaScript, canvas render
 
 Users choose OpenAI or Virginia Tech ARC and supply a personal API key. The inspected configuration names gpt-6-luna and DeepSeek-V4.1-Flash; these are configurable identifiers, not a promise of account-level availability. OpenAI research can use web and Python tools. The ARC path obtains article metadata and abstracts through Crossref. The two routes consequently expose different evidence and tool capabilities. Switching providers starts a fresh provider conversation rather than forwarding the other service's history.
 
-![Provider connection and optional encrypted conversation memory. No API key is entered.](figures/screenshot-02.png)
 
-*Figure 2. Provider connection and optional encrypted conversation memory. No API key is entered.*
 
 Keys remain in tab memory, and provider use can incur charges. Local document extraction does not mean local inference: question text, selected reading material, and relevant conversational context are sent to the chosen service when a request is made. Speech output uses browser speech synthesis, so voice and language coverage depend on the browser and operating system.
 
@@ -38,7 +36,7 @@ The document input accepts TXT, PDF, HTML, and DOCX, with an 8 MB upload limit. 
 
 ![Question and reviewed document input; the passage is illustrative text entered for this report.](figures/screenshot-03.png)
 
-*Figure 3. Question and reviewed document input; the passage is illustrative text entered for this report.*
+*Figure 2. Question and reviewed document input; the passage is illustrative text entered for this report.*
 
 Reading text of at most 18,000 characters is handled in a single request. Longer input is partitioned into chunks of approximately 16,000 characters, preferring a newline boundary after the midpoint and avoiding a split inside a surrogate pair. The partitioner retains every source character once; this coverage property concerns input segmentation, not completeness of the model's interpretation.
 
@@ -50,15 +48,15 @@ A research topic establishes an initial query. Stay focused retains that anchor;
 
 ![Research-topic controls, focus policy, and the explicit autonomous-research switch.](figures/screenshot-04.png)
 
-*Figure 4. Research-topic controls, focus policy, and the explicit autonomous-research switch.*
+*Figure 3. Research-topic controls, focus policy, and the explicit autonomous-research switch.*
 
 The visible notebook records request and tool events. It distinguishes background resting poses from actual research work, and it can be downloaded as a session record. Thinking, speaking, sleeping, reading, working, and writing animations are presentation states. They do not measure model reasoning or independently prove that a network operation succeeded.
 
-A built-in demonstration cycles through eight local scenes, approximately five seconds per scene. It makes no provider requests and performs no persistent-memory writes. Exiting restores the previous state. This gives users a way to inspect the interface without credentials; the labeled sample article in Figure 5 is demonstration content rather than a retrieved research result.
+A built-in demonstration cycles through eight local scenes, approximately five seconds per scene. It makes no provider requests and performs no persistent-memory writes. Exiting restores the previous state. This gives users a way to inspect the interface without credentials; the labeled sample article in Figure 4 is demonstration content rather than a retrieved research result.
 
 ![The built-in, labeled demonstration presents sample activity without making a live research request.](figures/screenshot-05.png)
 
-*Figure 5. The built-in, labeled demonstration presents sample activity without making a live research request.*
+*Figure 4. The built-in, labeled demonstration presents sample activity without making a live research request.*
 
 ## Optional encrypted conversation memory
 

@@ -40,12 +40,7 @@ Research on language-model tools separates model behavior from application orche
 \Needspace{10\baselineskip}
 \section{Architecture and provider boundary}
 
-\begin{wrapfigure}{r}{.43\linewidth}\centering
-\includegraphics[width=\linewidth,height=.25\textheight,keepaspectratio]{figures/screenshot-02.png}
-\caption{Provider connection and optional encrypted conversation memory. No API key is entered.}
-\Description{Provider connection and optional encrypted conversation memory. No API key is entered.}
-\label{fig:2}
-\end{wrapfigure}
+
 
 The frontend is a self-contained HTML application with JavaScript, canvas rendering, and embedded document-reading libraries. Conversation requests travel directly from the browser to the selected provider. The optional PHP and SQLite service stores encrypted conversation entries; it is not a proxy for inference. Hosting the frontend alone supports conversation when the provider permits browser-origin requests. Persistent memory additionally requires the configured PHP service and private storage outside the public web root.
 
@@ -81,7 +76,7 @@ A research topic establishes an initial query. Stay focused retains that anchor;
 
 The visible notebook records request and tool events. It distinguishes background resting poses from actual research work, and it can be downloaded as a session record. Thinking, speaking, sleeping, reading, working, and writing animations are presentation states. They do not measure model reasoning or independently prove that a network operation succeeded.
 
-A built-in demonstration cycles through eight local scenes, approximately five seconds per scene. It makes no provider requests and performs no persistent-memory writes. Exiting restores the previous state. This gives users a way to inspect the interface without credentials; the labeled sample article in Figure 5 is demonstration content rather than a retrieved research result.
+A built-in demonstration cycles through eight local scenes, approximately five seconds per scene. It makes no provider requests and performs no persistent-memory writes. Exiting restores the previous state. This gives users a way to inspect the interface without credentials; the labeled sample article in Figure~\ref{fig:5} is demonstration content rather than a retrieved research result.
 
 \begin{figure}[!htb]\centering
 \includegraphics[width=.96\linewidth,height=.35\textheight,keepaspectratio]{figures/screenshot-05.png}

@@ -11,17 +11,6 @@
     "caption": "FENNEC at rest, with its geometric fox and answer panel."
   },
   {
-    "file": "figures/screenshot-02.png",
-    "capture": "fennec-02.jpg",
-    "crop": [
-      675,
-      75,
-      1125,
-      320
-    ],
-    "caption": "Provider connection and optional encrypted conversation memory. No API key is entered."
-  },
-  {
     "file": "figures/screenshot-03.png",
     "capture": "fennec-03.jpg",
     "crop": [
