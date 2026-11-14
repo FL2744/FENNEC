@@ -20,6 +20,12 @@ Research on language-model tools separates model behavior from application orche
 
 *Figure 1. FENNEC at rest, with its geometric fox and answer panel.*
 
+### Research context
+
+Retrieval-augmented generation combines generated responses with retrieved evidence [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](https://arxiv.org/abs/2005.11401), while Self-RAG studies learned decisions about retrieval and critique [Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection](https://arxiv.org/abs/2310.11511). These works clarify the distinction between acquiring relevant material and generating a supported answer. FENNEC's application-level article retrieval is not a reproduction of either trained architecture. A retrieved title, abstract, or URL establishes an identifiable source, but the passage supporting a claim still needs to be checked.
+
+WebGPT studies browser-assisted answering with collected references [WebGPT: Browser-assisted question-answering with human feedback](https://arxiv.org/abs/2112.09332); WebArena evaluates the functional success of agents operating websites [WebArena: A Realistic Web Environment for Building Autonomous Agents](https://arxiv.org/abs/2307.13854). These are useful comparison points for assessing research actions separately from conversational fluency. FENNEC's visible progress and tool routing should be evaluated by whether intended operations complete and whether the resulting evidence supports the response. Lost in the Middle documents sensitivity to where relevant information appears in a long context [Lost in the Middle: How Language Models Use Long Contexts](https://arxiv.org/abs/2307.03172). That finding motivates inspecting document reduction and memory selection instead of assuming that accepting a long file ensures that every passage influences an answer.
+
 ## Architecture and provider boundary
 
 The frontend is a self-contained HTML application with JavaScript, canvas rendering, and embedded document-reading libraries. Conversation requests travel directly from the browser to the selected provider. The optional PHP and SQLite service stores encrypted conversation entries; it is not a proxy for inference. Hosting the frontend alone supports conversation when the provider permits browser-origin requests. Persistent memory additionally requires the configured PHP service and private storage outside the public web root.
@@ -87,4 +93,13 @@ This project was created with assistance from GPT-6 Astra and Codex. AI tools as
 4. Tianyu Gao, Howard Yen, Jiatong Yu, Danqi Chen (2023). [Enabling Large Language Models to Generate Text with Citations](https://aclanthology.org/2023.emnlp-main.398/). Proceedings of EMNLP; doi:10.18653/v1/2023.emnlp-main.398.
 
 5. Hugo Krawczyk, Pasi Eronen (2010). [HMAC-based Extract-and-Expand Key Derivation Function (HKDF)](https://www.rfc-editor.org/rfc/rfc5869). RFC 5869.
+6. Lewis, Patrick, Perez, Ethan, Piktus, Aleksandra, Petroni, Fabio, Karpukhin, Vladimir, Goyal, Naman, Küttler, Heinrich, Lewis, Mike, Yih, Wen-tau, Rocktäschel, Tim, Riedel, Sebastian, Kiela, Douwe (2020). [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](https://arxiv.org/abs/2005.11401). DOI: 10.48550/arXiv.2005.11401.
+
+7. Asai, Akari, Wu, Zeqiu, Wang, Yizhong, Sil, Avirup, Hajishirzi, Hannaneh (2023). [Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection](https://arxiv.org/abs/2310.11511). DOI: 10.48550/arXiv.2310.11511.
+
+8. Nakano, Reiichiro, Hilton, Jacob, Balaji, Suchir, Wu, Jeff, Ouyang, Long, Kim, Christina, Hesse, Christopher, Jain, Shantanu, Kosaraju, Vineet, Saunders, William, Jiang, Xu, Cobbe, Karl, Eloundou, Tyna, Krueger, Gretchen, Button, Kevin, Knight, Matthew, Chess, Benjamin, Schulman, John (2021). [WebGPT: Browser-assisted question-answering with human feedback](https://arxiv.org/abs/2112.09332). DOI: 10.48550/arXiv.2112.09332.
+
+9. Zhou, Shuyan, Xu, Frank F., Zhu, Hao, Zhou, Xuhui, Lo, Robert, Sridhar, Abishek, Cheng, Xianyi, Ou, Tianyue, Bisk, Yonatan, Fried, Daniel, Alon, Uri, Neubig, Graham (2023). [WebArena: A Realistic Web Environment for Building Autonomous Agents](https://arxiv.org/abs/2307.13854). DOI: 10.48550/arXiv.2307.13854.
+
+10. Liu, Nelson F., Lin, Kevin, Hewitt, John, Paranjape, Ashwin, Bevilacqua, Michele, Petroni, Fabio, Liang, Percy (2023). [Lost in the Middle: How Language Models Use Long Contexts](https://arxiv.org/abs/2307.03172). DOI: 10.48550/arXiv.2307.03172.
 

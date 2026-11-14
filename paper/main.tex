@@ -4,7 +4,7 @@
 \acmDOI{}\acmISBN{}
 \usepackage{graphicx,xurl,placeins,wrapfig,needspace}
 \setcitestyle{numbers}
-\geometry{left=1in,right=1in,top=.75in,bottom=.65in,includeheadfoot}
+\geometry{left=1in,right=1in,top=.65in,bottom=.55in,includeheadfoot}
 \renewcommand{\topfraction}{.92}
 \renewcommand{\bottomfraction}{.85}
 \renewcommand{\textfraction}{.06}
@@ -31,13 +31,19 @@ FENNEC expands to Frequently Engaged in Needless but Enthusiastic Contemplation.
 Research on language-model tools separates model behavior from application orchestration. ReAct interleaves reasoning and external actions \cite{react}, whereas Toolformer investigates learning when and how to call tools \cite{toolformer}. FENNEC implements application-level routing and state management around existing provider models; it does not train a tool-use policy. STORM demonstrates the value of research and planning before long-form writing \cite{storm}. FENNEC uses a smaller article-to-article exploration loop rather than that system's full writing pipeline. ALCE distinguishes answer quality from citation quality \cite{alce}, a distinction relevant to FENNEC's validation of research responses: a well-formed reference does not establish that an article supports a claim.
 
 \begin{figure}[!htb]\centering
-\includegraphics[width=.96\linewidth,height=.40\textheight,keepaspectratio]{figures/screenshot-01.png}
+\includegraphics[width=.96\linewidth,height=.32\textheight,keepaspectratio]{figures/screenshot-01.png}
 \caption{FENNEC at rest, with its geometric fox and answer panel.}
 \Description{FENNEC at rest, with its geometric fox and answer panel.}
 \label{fig:1}
 \end{figure}
 
 \Needspace{10\baselineskip}
+\subsection{Research context}
+
+Retrieval-augmented generation combines generated responses with retrieved evidence \cite{rag}, while Self-RAG studies learned decisions about retrieval and critique \cite{selfrag}. These works clarify the distinction between acquiring relevant material and generating a supported answer. FENNEC's application-level article retrieval is not a reproduction of either trained architecture. A retrieved title, abstract, or URL establishes an identifiable source, but the passage supporting a claim still needs to be checked.
+
+WebGPT studies browser-assisted answering with collected references \cite{webgpt}; WebArena evaluates the functional success of agents operating websites \cite{webarena}. These are useful comparison points for assessing research actions separately from conversational fluency. FENNEC's visible progress and tool routing should be evaluated by whether intended operations complete and whether the resulting evidence supports the response. Lost in the Middle documents sensitivity to where relevant information appears in a long context \cite{lost}. That finding motivates inspecting document reduction and memory selection instead of assuming that accepting a long file ensures that every passage influences an answer.
+
 \section{Architecture and provider boundary}
 
 
@@ -53,7 +59,7 @@ Keys remain in tab memory, and provider use can incur charges. Local document ex
 The document input accepts TXT, PDF, HTML, and DOCX, with an 8 MB upload limit. Extraction occurs in the browser and leaves editable text for review. Formatting, OCR, and complex document structure are not guaranteed to survive extraction. The user can also paste a passage directly. The question and this reviewed text form the document-analysis task.
 
 \begin{figure}[!htb]\centering
-\includegraphics[width=.96\linewidth,height=.35\textheight,keepaspectratio]{figures/screenshot-03.png}
+\includegraphics[width=.96\linewidth,height=.28\textheight,keepaspectratio]{figures/screenshot-03.png}
 \caption{Question and reviewed document input; the passage is illustrative text entered for this report.}
 \Description{Question and reviewed document input; the passage is illustrative text entered for this report.}
 \label{fig:3}
@@ -68,7 +74,7 @@ Each chunk produces brief notes, after which groups of notes are recursively con
 A research topic establishes an initial query. Stay focused retains that anchor; otherwise a validated article result may suggest the next topic. With an appropriate connection and the research option enabled, a visible idle tab can start exploration after roughly 30 seconds. User interaction resets the idle interval, and a hidden tab pauses this behavior. Failure disables automatic research until the user re-enables it. Validation of structured article metadata and citations precedes advancement to the next topic.
 
 \begin{figure}[!htb]\centering
-\includegraphics[width=.96\linewidth,height=.35\textheight,keepaspectratio]{figures/screenshot-04.png}
+\includegraphics[width=.96\linewidth,height=.28\textheight,keepaspectratio]{figures/screenshot-04.png}
 \caption{Research-topic controls, focus policy, and the explicit autonomous-research switch.}
 \Description{Research-topic controls, focus policy, and the explicit autonomous-research switch.}
 \label{fig:4}
@@ -79,7 +85,7 @@ The visible notebook records request and tool events. It distinguishes backgroun
 A built-in demonstration cycles through eight local scenes, approximately five seconds per scene. It makes no provider requests and performs no persistent-memory writes. Exiting restores the previous state. This gives users a way to inspect the interface without credentials; the labeled sample article in Figure~\ref{fig:5} is demonstration content rather than a retrieved research result.
 
 \begin{figure}[!htb]\centering
-\includegraphics[width=.96\linewidth,height=.35\textheight,keepaspectratio]{figures/screenshot-05.png}
+\includegraphics[width=.96\linewidth,height=.28\textheight,keepaspectratio]{figures/screenshot-05.png}
 \caption{The built-in, labeled demonstration presents sample activity without making a live research request.}
 \Description{The built-in, labeled demonstration presents sample activity without making a live research request.}
 \label{fig:5}
