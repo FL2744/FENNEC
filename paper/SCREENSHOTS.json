@@ -1,0 +1,57 @@
+[
+  {
+    "file": "figures/screenshot-01.png",
+    "capture": "fennec-01.jpg",
+    "crop": [
+      135,
+      25,
+      1125,
+      900
+    ],
+    "caption": "FENNEC at rest, with its geometric fox and answer panel."
+  },
+  {
+    "file": "figures/screenshot-02.png",
+    "capture": "fennec-02.jpg",
+    "crop": [
+      675,
+      75,
+      1125,
+      320
+    ],
+    "caption": "Provider connection and optional encrypted conversation memory. No API key is entered."
+  },
+  {
+    "file": "figures/screenshot-03.png",
+    "capture": "fennec-03.jpg",
+    "crop": [
+      135,
+      920,
+      1125,
+      1545
+    ],
+    "caption": "Question and reviewed document input; the passage is illustrative text entered for this report."
+  },
+  {
+    "file": "figures/screenshot-04.png",
+    "capture": "fennec-03.jpg",
+    "crop": [
+      135,
+      1550,
+      1125,
+      1940
+    ],
+    "caption": "Research-topic controls, focus policy, and the explicit autonomous-research switch."
+  },
+  {
+    "file": "figures/screenshot-05.png",
+    "capture": "fennec-04.jpg",
+    "crop": [
+      135,
+      25,
+      1125,
+      1010
+    ],
+    "caption": "The built-in, labeled demonstration presents sample activity without making a live research request."
+  }
+]

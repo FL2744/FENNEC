@@ -1,5 +1,8 @@
 ![FENNEC — Frequently Engaged in Needless but Enthusiastic Contemplation](assets/fennec-logo.png)
 
+Technical paper: [PDF](paper/Technical-Paper.pdf) · [LaTeX](paper/main.tex) · [Markdown](paper/TECHNICAL_PAPER.md) · [Source bundle](paper/Technical-Paper-Source.zip)
+
+
 A curious little agent with very large ears: FENNEC chats in 24 languages, reads documents and articles, and occasionally remembers what you told it.
 
 [FENNEC web implementation →](https://l1001.vt.domains/fennec.html)
