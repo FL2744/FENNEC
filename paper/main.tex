@@ -24,11 +24,11 @@ FENNEC combines multilingual conversation, document reading, article exploration
 \end{abstract}
 \keywords{conversational interfaces, document analysis, research agents, encrypted storage}
 \maketitle
-\section{Purpose and research context}
+\section{Purpose and Research Context}
 
-FENNEC expands to Frequently Engaged in Needless but Enthusiastic Contemplation. Its central interaction is a question, an optional reading passage, and an answer in one of 24 selectable languages. The answer language is independent of the language of the question. Research and memory are additional explicit operations; the animated character makes their state visible without being the authority on whether a request actually completed.
+FENNEC, Frequently Engaged in Needless but Enthusiastic Contemplation, combines multilingual conversation with document reading and explicit research operations. Its basic interaction is a question, an optional passage, and an answer in one of 24 selectable languages, independently of the question's language. The design seeks to make additional actions, such as research and memory use, visible and deliberate. The animated character communicates state, while completion is determined by the underlying operation and its results.
 
-Research on language-model tools separates model behavior from application orchestration. ReAct interleaves reasoning and external actions \cite{react}, whereas Toolformer investigates learning when and how to call tools \cite{toolformer}. FENNEC implements application-level routing and state management around existing provider models; it does not train a tool-use policy. STORM demonstrates the value of research and planning before long-form writing \cite{storm}. FENNEC uses a smaller article-to-article exploration loop rather than that system's full writing pipeline. ALCE distinguishes answer quality from citation quality \cite{alce}, a distinction relevant to FENNEC's validation of research responses: a well-formed reference does not establish that an article supports a claim.
+Research on language-model tools helps locate that design within a larger system. ReAct interleaves reasoning with external actions \cite{react}, and Toolformer investigates learning when and how to call tools \cite{toolformer}. FENNEC instead routes requests and manages state around existing provider models at the application level. WebGPT's browser-assisted answering and WebArena's evaluation of website tasks further show why conversational fluency and successful action must be assessed separately \cite{webgpt,webarena}. For this interface, useful progress feedback should correspond to completed operations and inspectable evidence.
 
 \begin{figure}[!htb]\centering
 \includegraphics[width=.96\linewidth,height=.32\textheight,keepaspectratio]{figures/screenshot-01.png}
@@ -37,12 +37,9 @@ Research on language-model tools separates model behavior from application orche
 \label{fig:1}
 \end{figure}
 
-\Needspace{10\baselineskip}
-\subsection{Research context}
+The research workflow connects article discovery to a similarly explicit evidence boundary. Retrieval-augmented generation combines generation with retrieved material \cite{rag}, while Self-RAG studies learned retrieval and critique decisions \cite{selfrag}. STORM organizes research and planning before long-form writing \cite{storm}. FENNEC draws on these concerns through a smaller article-to-article exploration loop, without reproducing those trained architectures or full writing pipelines. ALCE's separation of answer quality from citation quality is especially relevant \cite{alce}: a valid title, identifier, or URL identifies a source, but the source passage must still support the claim made from it.
 
-Retrieval-augmented generation combines generated responses with retrieved evidence \cite{rag}, while Self-RAG studies learned decisions about retrieval and critique \cite{selfrag}. These works clarify the distinction between acquiring relevant material and generating a supported answer. FENNEC's application-level article retrieval is not a reproduction of either trained architecture. A retrieved title, abstract, or URL establishes an identifiable source, but the passage supporting a claim still needs to be checked.
-
-WebGPT studies browser-assisted answering with collected references \cite{webgpt}; WebArena evaluates the functional success of agents operating websites \cite{webarena}. These are useful comparison points for assessing research actions separately from conversational fluency. FENNEC's visible progress and tool routing should be evaluated by whether intended operations complete and whether the resulting evidence supports the response. Lost in the Middle documents sensitivity to where relevant information appears in a long context \cite{lost}. That finding motivates inspecting document reduction and memory selection instead of assuming that accepting a long file ensures that every passage influences an answer.
+Document reading and optional memory extend this workflow across longer material, where selection becomes part of interpretation. Lost in the Middle reports sensitivity to the position of relevant information within a context \cite{lost}, motivating inspection of FENNEC's document reduction and memory selection rather than assuming that accepting a file ensures use of every passage. The report therefore focuses on the implemented orchestration, evidence handling, and user-visible state. Evaluation should examine whether intended actions complete, whether answers are supported, and which information survives reduction; the interface alone establishes none of those outcomes.
 
 \section{Architecture and provider boundary}
 
