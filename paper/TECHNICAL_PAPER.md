@@ -103,3 +103,6 @@ This project was created with assistance from GPT-6 Astra and Codex. AI tools as
 
 10. Liu, Nelson F., Lin, Kevin, Hewitt, John, Paranjape, Ashwin, Bevilacqua, Michele, Petroni, Fabio, Liang, Percy (2023). [Lost in the Middle: How Language Models Use Long Contexts](https://arxiv.org/abs/2307.03172). DOI: 10.48550/arXiv.2307.03172.
 
+## Suggested Citation
+
+William Taggart. 2026. FENNEC: A Browser-Based Conversational and Research Companion. Technical report. Modern and Classical Languages and Literatures, Virginia Tech. https://github.com/FL2744/FENNEC
